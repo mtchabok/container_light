@@ -8,6 +8,7 @@ composer require mtchabok/container_light
 ```
 
 ## Usage
+```php
 $container = new \MCL\Container();
 $container->bind(function(){ return "\nHello World!"; }, 'test');
 $container->bind(fn() => "\nHow Are You?", 'test2');
@@ -17,3 +18,4 @@ echo $container->call('test');
 echo $container->get('test1', "\ndefault value");
 echo $container->test2();
 echo $container->test3;
+```
