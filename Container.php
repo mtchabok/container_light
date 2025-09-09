@@ -124,7 +124,7 @@ class Container implements ContainerInterface
                 elseif (!empty($resource['alias']))
                     $resource['type'] = AliasResource::class;
                 else
-                    $resource['type'] = ValueResource::class;
+                    $resource = ['type' => ValueResource::class, 'value' => $resource];
             }elseif (!is_subclass_of($resource['type'], Resources::class))
                 return null;
         }
@@ -483,6 +483,7 @@ class Container implements ContainerInterface
             ContainerNamespace::class => ClassResource::create(ContainerNamespace::class) ,
         ]);
     }
+
 
 
 }
