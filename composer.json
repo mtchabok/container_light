@@ -4,7 +4,7 @@
   "keywords": ["php", "container", "dependency injection"],
   "license": "MIT",
   "type": "library",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "authors": [
     {
       "name": "Mohamad Tagi Chabok",
