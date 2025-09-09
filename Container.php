@@ -437,8 +437,18 @@ class Container implements ContainerInterface
             return $this->get($name);
         if(($this->namespaces[$name]??null) instanceof ContainerNamespace)
             return $this->namespaces[$name];
-        $this->namespaces[$name] = $this->makeParamsArray(is_string($this->namespaces[$name])
-            ?$this->namespaces[$name] :ContainerNamespace::class, [$this, $name]);
+        if(isset($this->namespaces[$name])){
+            if(is_callable($this->namespaces[$name])){
+                $this->namespaces[$name] = call_user_func($this->namespaces[$name], $this, $name);
+                if($this->namespaces[$name] instanceof ContainerNamespace)
+                    return $this->namespaces[$name];
+            }elseif (is_string($this->namespaces[$name]) && is_subclass_of($this->namespaces[$name], ContainerNamespace::class)){
+                $this->namespaces[$name] = $this->makeParamsArray($this->namespaces[$name], [$this, $name]);
+                if($this->namespaces[$name] instanceof ContainerNamespace)
+                    return $this->namespaces[$name];
+            }
+        }
+        $this->namespaces[$name] = $this->makeParamsArray(ContainerNamespace::class, [$this, $name]);
         return $this->namespaces[$name];
     }
 
@@ -487,3 +497,4 @@ class Container implements ContainerInterface
 
 
 }
+
