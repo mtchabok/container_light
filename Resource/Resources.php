@@ -78,7 +78,7 @@ abstract class Resources
         foreach ($options as $key => $value) {
             if('instance' === $key)
                 $this->setInstance($value);
-            else
+            elseif(is_string($key))
                 $this->{$key}($value);
         }
         return $this;
@@ -237,4 +237,5 @@ abstract class Resources
     {}
     public function __call(string $name, array $arguments)
     {}
+
 }
