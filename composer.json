@@ -1,0 +1,25 @@
+{
+  "name": "mtchabok/container_light",
+  "description": "A lightweight, fast, and flexible container for managing resources (values, functions, objects, etc.)",
+  "keywords": ["php", "container", "dependency injection"],
+  "license": "MIT",
+  "type": "library",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Mohamad Tagi Chabok",
+      "email": "mtchabok@gmail.com",
+      "homepage": "https://mtchabok.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "psr/container": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MCL\\": ""
+    }
+  }
+}
