@@ -113,7 +113,7 @@ class Container implements ContainerInterface
         if($resource instanceof Resources)
             return $resource;
         if(is_callable($resource)){
-            $resource = ['type' => CallableResource::class, 'callback' => $resource, 'isAutowire' => true];
+            $resource = ['type' => CallableResource::class, 'callback' => $resource, 'isAutowired' => true];
         }
         elseif(is_array($resource)){
             if(empty($resource['type'])){
@@ -497,4 +497,5 @@ class Container implements ContainerInterface
 
 
 }
+
 
