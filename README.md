@@ -35,3 +35,34 @@ echo $container->get('test1', "\ndefault value");
 echo $container->test2();
 echo $container->test3;
 ```
+```text
+Hello World!
+default value
+How Are You?
+I`m Fine!
+```
+### Usage alias and share
+```php
+$c = new \MCL\Container();
+$c->binds([
+    'uniqid' => 'uniqid',
+    'unique' => fn (\MCL\Container $c) => $c->get('uniqid'),
+    'uniqueAlias' => ['type'=>\MCL\Resource\AliasResource::class, 'aliasOf'=>'unique', 'isShared'=>true],
+    'uniqueMessage' => fn (\MCL\Container $c) => "\nUnique ID: ".$c->get('unique'),
+    'uniqueAliasMessage' => fn (\MCL\Container $c) => "\nUnique alias ID: ".$c->get('uniqueAlias'),
+]);
+echo $c->get('uniqueMessage');
+echo $c->get('uniqueAliasMessage');
+echo $c->get('uniqueMessage');
+echo $c->get('uniqueAliasMessage');
+echo $c->get('uniqueAliasMessage1', "\nnot found!");
+echo $c->get('uniqueMessage');
+```
+```text
+Unique ID: 68c7c2a42a610
+Unique alias ID: 68c7c2a42a65b
+Unique ID: 68c7c2a42a675
+Unique alias ID: 68c7c2a42a65b
+not found!
+Unique ID: 68c7c2a42a69b
+```
