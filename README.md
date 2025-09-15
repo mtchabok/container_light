@@ -10,10 +10,12 @@ A lightweight, fast, and flexible container for managing resources (values, func
 - flexible load resources [file or array] (control with name space and load resources with match resource name and source name space)
 - run anonymous closure (with call method)
 - support create object from class without bind (with make method)
-- multiple dependency injection support
+- multiple dependency injection support (class|closure|alias)
   - auto injection
   - define closure for dependencies
   - direct array pass to resource
+- optimize use of server resources [cpu,ram] (load resources)
+- flexible access to resources (__get, __call method)
 
 ## Installation
 Use the package manager [composer](https://getcomposer.org/) to install mtchabok container light.
