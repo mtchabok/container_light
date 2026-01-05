@@ -39,6 +39,11 @@ class Source
     {}
 
 
+    protected function source(Closure|array|string $data) :Source
+    { return new static($this->container, $data); }
+
+    protected function sourceIf(Closure|array|string $data) :Source
+    { return new static($this->container, $data, true); }
 
 
     /**
