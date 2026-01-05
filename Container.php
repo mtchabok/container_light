@@ -631,7 +631,9 @@ class Container implements ContainerInterface, \ArrayAccess
                     }elseif(!empty($namespace)){
                         $i = "$namespace.$i";
                     }
-                    if(!($source->ifNotExists
+                    if($resource instanceof Source){
+                        $this->sources[$i][] = $resource;
+                    }elseif(!($source->ifNotExists
                         && ( isset($this->definitions[$i]) || isset($this->resources[$i]) )))
                         $this->resources[$i][] = $resource;
                 }
@@ -676,21 +678,24 @@ class Container implements ContainerInterface, \ArrayAccess
 
 
     public function __isset(string $name): bool
-    { return $this->has($name); }
+    { return $this->has(str_replace('_','.',$name)) || $this->has($name); }
 
     public function offsetExists(mixed $offset): bool
     { return $this->has($offset); }
 
 
     public function __get(string $name)
-    { return $this->get($name); }
+    {
+        return $this->has(str_replace('_','.',$name))
+            ?$this->get(str_replace('_','.',$name)) : $this->get($name);
+    }
 
     public function offsetGet(mixed $offset): mixed
     { return $this->get($offset); }
 
 
     public function __set(string $name, $value): void
-    { $this->add([$name=>$value]); }
+    { $this->add([str_replace('_','.',$name)=>$value]); }
 
     public function offsetSet(mixed $offset, mixed $value): void
     { $this->add([$offset=>$value]); }
