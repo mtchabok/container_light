@@ -4,10 +4,10 @@
   "keywords": ["php", "container", "dependency injection"],
   "license": "MIT",
   "type": "library",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "authors": [
     {
-      "name": "Mohamad Tagi Chabok",
+      "name": "Mohamad Taqi Chabok",
       "email": "mtchabok@gmail.com",
       "homepage": "https://mtchabok.com",
       "role": "Developer"
