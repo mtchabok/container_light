@@ -674,7 +674,7 @@ class Container implements ContainerInterface, \ArrayAccess
      * @throws Exception
      */
     public function __call(string $name, array $arguments)
-    { return $this->callArrayArgs($name, $arguments); }
+    { return $this->callArrayArgs($this->has(str_replace('_','.',$name)) ?str_replace('_','.',$name) :$name, $arguments); }
 
 
     public function __isset(string $name): bool
@@ -707,3 +707,4 @@ class Container implements ContainerInterface, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     { }
 }
+
