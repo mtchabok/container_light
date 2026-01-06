@@ -22,8 +22,16 @@ use \Exception;
  *
  * @method ValueDefinition value(mixed $value)
  * @method ValueDefinition valueIf(mixed $value)
+ * @method ValueDefinition valueProtected(mixed $value)
+ * @method ValueDefinition valueProtectedIf(mixed $value)
+ *
+ * @method CallableDefinition values(string $values)
+ * @method CallableDefinition valuesIf(string $values)
+ * @method CallableDefinition valuesProtected(string $values)
+ * @method CallableDefinition valuesProtectedIf(string $values)
  *
  * @method Event event(callable|Closure|array|string $callable)
+ *
  */
 class Source
 {
@@ -76,21 +84,28 @@ class Source
     public function __call(string $name, array $arguments)
     {
         $obj = null;
+        $arguments = $arguments[0];
         if(str_starts_with($name, 'class'))
-            $obj = Definition::createClass($arguments[0]);
+            $obj = Definition::createClass($arguments);
         elseif(str_starts_with($name, 'callable'))
-            $obj = Definition::createCallable($arguments[0]);
+            $obj = Definition::createCallable($arguments);
         elseif(str_starts_with($name, 'alias'))
-            $obj = Definition::createAlias($arguments[0]);
-        elseif(str_starts_with($name, 'value'))
-            $obj = Definition::createValue($arguments[0]);
+            $obj = Definition::createAlias($arguments);
+        elseif(str_starts_with($name, 'values') && is_string($arguments)) {
+            $obj = Definition::createCallable(function () use ($arguments) {
+                return include $arguments;
+            })->shared(true);
+        }elseif(str_starts_with($name, 'value'))
+            $obj = Definition::createValue($arguments);
         elseif(str_starts_with($name, 'event'))
-            $obj = Event::createEvent($arguments[0]);
+            $obj = Event::createEvent($arguments);
         if($obj){
-            if(str_contains($name, 'If') || $this->ifNotExists)
+            if(str_ends_with($name, 'If') || $this->ifNotExists)
                 $obj->ifNotExists(true);
             if(str_contains($name, 'Shared'))
                 $obj->shared(true);
+            if(str_contains($name, 'Protected'))
+                $obj->protected(true);
         }
         return $obj;
     }
