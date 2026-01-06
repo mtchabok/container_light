@@ -13,6 +13,8 @@ class ContainerTest extends TestCase
         $name = 'value1';
         $value = 'val1';
         $container->add([$name => $value]);
+//        $container->{$name};
+//        var_dump($container);
         $this->assertEquals($value, $container->{$name});
     }
 
@@ -57,6 +59,13 @@ class ContainerTest extends TestCase
         $val1 = $container->p1;
         $container->p1 = ($val2 = 'new Value');
         $this->assertNotEquals($val1,$val2);
+    }
+
+    public function testValuesInSource()
+    {
+        $container = new Container();
+        $container->add(__DIR__.'/source.php');
+        $this->assertEquals('localhost', $container->config['database']['host']);
     }
 
 }

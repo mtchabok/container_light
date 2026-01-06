@@ -19,4 +19,6 @@ return [
 
     ':params' => function($p,$c,$id){ echo "\n[on params of '$id'] "; },
     ':after' => function($p, $c, $id){ return is_string($p) ?"$p [after on: $id]" :$p; },
+
+    'config' => $this->valuesProtected(__DIR__.'/config.php'),
 ];
