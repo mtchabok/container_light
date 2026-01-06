@@ -12,6 +12,7 @@ use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
+use function PHPUnit\Framework\isNull;
 
 class Container implements ContainerInterface, \ArrayAccess
 {
@@ -607,11 +608,9 @@ class Container implements ContainerInterface, \ArrayAccess
         $isEventId = str_contains($id,':');
         $parts = substr($id, 0, strpos($isEventId?$id:"$id:",':'));
         $parts = explode('.', empty($parts) ?'' :".{$parts}");
-        do{
-            $namespace = implode('.',$parts);
-            if(str_starts_with($namespace,'.'))
-                $namespace = substr($namespace,1);
-            array_pop($parts);
+        $namespace = '';
+        while(!is_null($ns = array_shift($parts))){
+            if($ns) $namespace .= ($namespace ?'.':'') . $ns;
             if(!isset($this->sources[$namespace]))
                 continue;
             while ($source = array_shift($this->sources[$namespace])) {
@@ -638,7 +637,8 @@ class Container implements ContainerInterface, \ArrayAccess
                         $this->resources[$i][] = $resource;
                 }
             }
-        }while($parts);
+            unset($this->sources[$namespace]);
+        }
 
         if(isset($this->resources[$id])
             && !(($isExist = isset($this->definitions[$id])) && array_key_exists($id, $this->execution))){
@@ -674,11 +674,16 @@ class Container implements ContainerInterface, \ArrayAccess
      * @throws Exception
      */
     public function __call(string $name, array $arguments)
-    { return $this->callArrayArgs($this->has(str_replace('_','.',$name)) ?str_replace('_','.',$name) :$name, $arguments); }
+    { return $this->callArrayArgs(
+        (str_contains($name,'_') && $this->has(str_replace('_','.',$name)))
+            ?str_replace('_','.',$name) :$name,
+        $arguments);
+    }
 
 
     public function __isset(string $name): bool
-    { return $this->has(str_replace('_','.',$name)) || $this->has($name); }
+    { return (str_contains($name,'_') && $this->has(str_replace('_','.',$name)))
+        || $this->has($name); }
 
     public function offsetExists(mixed $offset): bool
     { return $this->has($offset); }
@@ -686,7 +691,7 @@ class Container implements ContainerInterface, \ArrayAccess
 
     public function __get(string $name)
     {
-        return $this->has(str_replace('_','.',$name))
+        return (str_contains($name,'_') && $this->has(str_replace('_','.',$name)))
             ?$this->get(str_replace('_','.',$name)) : $this->get($name);
     }
 
